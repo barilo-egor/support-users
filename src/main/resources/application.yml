@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: "support-users"
+  config:
+    import: "file:config/config.yml"

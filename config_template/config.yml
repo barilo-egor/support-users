@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    username: ""
+    password: ""
+    driver-class-name: ""
+    url: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mvc:
+    problemdetails:
+      enabled: true
+  port:
+secrets:
+  master-key:
+  jwt:
+    private:
+    public:
+    version:
+    ttl-seconds:
+    refresh-ttl-seconds:
