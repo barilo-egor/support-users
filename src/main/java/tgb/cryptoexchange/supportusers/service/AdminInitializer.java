@@ -1,0 +1,45 @@
+package tgb.cryptoexchange.supportusers.service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import tgb.cryptoexchange.supportusers.entity.SupportUser;
+import tgb.cryptoexchange.supportusers.enums.UserRole;
+import tgb.cryptoexchange.supportusers.repository.UserRepository;
+import tgb.cryptoexchange.supportusers.util.PasswordGenerator;
+
+@Component
+@Slf4j
+public class AdminInitializer {
+
+    private final UserRepository userRepository;
+
+    public AdminInitializer(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    /**
+     * Автоматически создает учетную запись администратора со сгенерированным паролем
+     * при первом запуске приложения, если база данных пользователей пуста.
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void initAdminUser() {
+        if (userRepository.count() == 0) {
+            log.info("База данных пуста. Создание администратора администратора...");
+            String rawPassword = PasswordGenerator.generateValidPassword();
+            try {
+                SupportUser user = SupportUser.builder().username("admin").password(rawPassword).role(UserRole.ADMINISTRATOR).build();
+                userRepository.save(user);
+                log.info("==================================================");
+                log.info("СОЗДАН АДМИНИСТРАТОР ПО УМОЛЧАНИЮ!");
+                log.info("Логин: {}", user.getUsername());
+                log.info("Пароль: {}", rawPassword);
+                log.info("==================================================");
+
+            } catch (Exception e) {
+                log.error("Ошибка при автоматическом создании администратора", e);
+            }
+        }
+    }
+}
