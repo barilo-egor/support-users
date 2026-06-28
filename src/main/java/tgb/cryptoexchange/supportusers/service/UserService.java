@@ -80,7 +80,14 @@ public class UserService {
         return userMapper.fromEntity(user);
     }
 
-    private String validateAndHashPassword(String password) {
+    /**
+     * Проверяет надежность пароля по регулярному выражению и хэширует его.
+     *
+     * @param password исходный пароль в открытом виде
+     * @return захэшированная строка пароля
+     * @throws PasswordValidationException если пароль равен null или не соответствует требованиям безопасности
+     */
+    public String validateAndHashPassword(String password) {
         if (password == null || !password.matches(STRENGTH_REGEX)) {
             throw new PasswordValidationException();
         }

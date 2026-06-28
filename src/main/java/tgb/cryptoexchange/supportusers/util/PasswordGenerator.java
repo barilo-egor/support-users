@@ -28,7 +28,7 @@ public final class PasswordGenerator {
         passwordChars.add(UPPER.charAt(RANDOM.nextInt(UPPER.length())));
         passwordChars.add(DIGITS.charAt(RANDOM.nextInt(DIGITS.length())));
         passwordChars.add(SPECIAL.charAt(RANDOM.nextInt(SPECIAL.length())));
-        for (int i = 4; i < 8; i++) {
+        for (int i = 4; i < 10; i++) {
             passwordChars.add(ALL_CHARS.charAt(RANDOM.nextInt(ALL_CHARS.length())));
         }
         Collections.shuffle(passwordChars, RANDOM);

@@ -15,8 +15,11 @@ public class AdminInitializer {
 
     private final UserRepository userRepository;
 
-    public AdminInitializer(UserRepository userRepository) {
+    private final UserService userService;
+
+    public AdminInitializer(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -26,10 +29,12 @@ public class AdminInitializer {
     @EventListener(ApplicationReadyEvent.class)
     public void initAdminUser() {
         if (userRepository.count() == 0) {
-            log.info("База данных пуста. Создание администратора администратора...");
+            log.info("База данных пуста. Создание администратора...");
             String rawPassword = PasswordGenerator.generateValidPassword();
             try {
-                SupportUser user = SupportUser.builder().username("admin").password(rawPassword).role(UserRole.ADMINISTRATOR).build();
+                SupportUser user = SupportUser.builder().username("admin")
+                        .password(userService.validateAndHashPassword(rawPassword))
+                        .role(UserRole.ADMINISTRATOR).build();
                 userRepository.save(user);
                 log.info("==================================================");
                 log.info("СОЗДАН АДМИНИСТРАТОР ПО УМОЛЧАНИЮ!");
